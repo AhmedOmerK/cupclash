@@ -50,6 +50,12 @@ public class PredictionService {
         return predictionRepository.findByMatchId(matchId);
     }
 
+    // Returns a single prediction by ID, throws if not found
+    public Prediction getById(Long id) {
+        return predictionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Prediction not found: " + id));
+    }
+
     // Returns true if the user has already predicted this match
     public boolean hasPrediction(Long matchId) {
         return predictionRepository.findFirstByMatchId(matchId).isPresent();

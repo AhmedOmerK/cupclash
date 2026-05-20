@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CupClash — Game-by-Game</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0e1a;
+            color: #e8eaf0;
+            min-height: 100vh;
+        }
+
+        /* ── Nav ── */
+        nav {
+            background: #111827;
+            border-bottom: 2px solid #1e3a5f;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f5c518;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: #f5c518; }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(135deg, #0f2544 0%, #1a1a2e 100%);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid #1e3a5f;
+        }
+        .hero h1 { font-size: 2rem; color: #f5c518; margin-bottom: 0.4rem; }
+        .hero p  { color: #9ca3af; font-size: 0.95rem; }
+
+        /* ── Main layout ── */
+        .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        /* ── Group section ── */
+        .group-section { margin-bottom: 2.5rem; }
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .group-badge {
+            background: #f5c518;
+            color: #0a0e1a;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+        .group-line {
+            flex: 1;
+            height: 1px;
+            background: #1e3a5f;
+            margin-left: 1rem;
+        }
+
+        /* ── Match card ── */
+        .match-card {
+            background: #111827;
+            border: 1px solid #1e3a5f;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 1.25rem;
+            margin-bottom: 0.5rem;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .match-card:hover {
+            border-color: #f5c518;
+            background: #151f30;
+        }
+
+        .match-teams {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .team-name { color: #e8eaf0; }
+        .vs {
+            color: #4b5563;
+            font-size: 0.8rem;
+            font-weight: 400;
+        }
+
+        .predict-btn {
+            background: #1e3a5f;
+            color: #f5c518;
+            border: 1px solid #2d5a8e;
+            border-radius: 6px;
+            padding: 0.45rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s;
+            white-space: nowrap;
+        }
+        .predict-btn:hover {
+            background: #2d5a8e;
+            border-color: #f5c518;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            color: #374151;
+            font-size: 0.8rem;
+            padding: 2rem;
+            border-top: 1px solid #111827;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="logo" href="/">⚽ CupClash</a>
+    <div class="nav-links">
+        <a href="/game" class="active">Game-by-Game</a>
+        <a href="/bracket">Full Bracket</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1>2026 World Cup — Group Stage</h1>
+    <p>Select any match to view Elo probabilities and make your prediction.</p>
+</div>
+
+<div class="container">
+
+    <!-- Loop over each group (A → L) -->
+    <div class="group-section" th:each="entry : ${matchesByGroup}">
+
+        <div class="group-header">
+            <span class="group-badge" th:text="'GROUP ' + ${entry.key}">GROUP A</span>
+            <div class="group-line"></div>
+        </div>
+
+        <!-- Loop over the 6 matches in this group -->
+        <div class="match-card" th:each="match : ${entry.value}">
+            <div class="match-teams">
+                <span class="team-name" th:text="${match.teamA.name}">Team A</span>
+                <span class="vs">VS</span>
+                <span class="team-name" th:text="${match.teamB.name}">Team B</span>
+            </div>
+            <a class="predict-btn" th:href="@{/game/{id}(id=${match.id})}">Predict →</a>
+        </div>
+
+    </div>
+</div>
+
+<footer>CupClash &copy; 2026 — Powered by Elo Ratings</footer>
+
+</body>
+</html>

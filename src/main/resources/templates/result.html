@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Prediction Saved — CupClash</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0e1a;
+            color: #e8eaf0;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #111827;
+            border-bottom: 2px solid #1e3a5f;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .logo { font-size: 1.4rem; font-weight: 700; color: #f5c518; text-decoration: none; letter-spacing: 1px; }
+        .nav-links a { color: #9ca3af; text-decoration: none; margin-left: 1.5rem; font-size: 0.9rem; }
+        .nav-links a:hover { color: #f5c518; }
+
+        .container { max-width: 620px; margin: 3rem auto; padding: 0 1.5rem; }
+
+        /* ── Success banner ── */
+        .success-banner {
+            background: linear-gradient(135deg, #14532d, #166534);
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .success-banner .checkmark { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .success-banner h1 { font-size: 1.3rem; color: #86efac; margin-bottom: 0.25rem; }
+        .success-banner p  { font-size: 0.9rem; color: #4ade80; }
+
+        /* ── Prediction summary card ── */
+        .summary-card {
+            background: #111827;
+            border: 1px solid #1e3a5f;
+            border-radius: 12px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .summary-card h2 {
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.25rem;
+        }
+
+        .match-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        .team { text-align: center; flex: 1; }
+        .team .name { font-size: 1.25rem; font-weight: 700; }
+        .team .elo  { font-size: 0.8rem; color: #6b7280; margin-top: 0.2rem; }
+        .vs { color: #374151; font-weight: 700; }
+
+        .divider { height: 1px; background: #1e3a5f; margin-bottom: 1.25rem; }
+
+        .your-pick-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .pick-label { font-size: 0.85rem; color: #9ca3af; }
+        .pick-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f5c518;
+            background: #1e3a5f;
+            padding: 0.35rem 1rem;
+            border-radius: 6px;
+        }
+
+        /* ── Probability recap ── */
+        .prob-card {
+            background: #111827;
+            border: 1px solid #1e3a5f;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.75rem;
+        }
+        .prob-card h2 {
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        .prob-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.55rem;
+            font-size: 0.87rem;
+        }
+        .prob-label { width: 70px; color: #9ca3af; text-align: right; flex-shrink: 0; }
+        .prob-bar-track {
+            flex: 1;
+            background: #1e2d3d;
+            border-radius: 4px;
+            height: 20px;
+            overflow: hidden;
+        }
+        .prob-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+        .fill-a    { background: linear-gradient(90deg, #2563eb, #3b82f6); color: #fff; }
+        .fill-draw { background: linear-gradient(90deg, #4b5563, #6b7280); color: #e5e7eb; }
+        .fill-b    { background: linear-gradient(90deg, #dc2626, #ef4444); color: #fff; }
+
+        /* ── Action buttons ── */
+        .actions { display: flex; gap: 1rem; }
+        .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-primary { background: #f5c518; color: #0a0e1a; }
+        .btn-primary:hover { background: #e0b015; }
+        .btn-secondary { background: #1e3a5f; color: #e8eaf0; border: 1px solid #2d5a8e; }
+        .btn-secondary:hover { background: #2d5a8e; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="logo" href="/">⚽ CupClash</a>
+    <div class="nav-links">
+        <a href="/game">Game-by-Game</a>
+        <a href="/bracket">Full Bracket</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Success confirmation -->
+    <div class="success-banner">
+        <div class="checkmark">✓</div>
+        <h1>Prediction Locked In!</h1>
+        <p>Your pick has been saved to the database.</p>
+    </div>
+
+    <!-- What was predicted -->
+    <div class="summary-card">
+        <h2>Your Prediction</h2>
+
+        <div class="match-row">
+            <div class="team">
+                <div class="name" th:text="${prediction.match.teamA.name}">Team A</div>
+                <div class="elo"  th:text="'Elo ' + ${prediction.match.teamA.eloRating}">Elo 2000</div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team">
+                <div class="name" th:text="${prediction.match.teamB.name}">Team B</div>
+                <div class="elo"  th:text="'Elo ' + ${prediction.match.teamB.eloRating}">Elo 1900</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="your-pick-row">
+            <span class="pick-label">You predicted</span>
+            <!-- Show team name for a win pick, or "Draw" for a draw pick -->
+            <span class="pick-value"
+                  th:text="${prediction.predictedWinner != null} ? ${prediction.predictedWinner} : 'Draw'">
+                Brazil
+            </span>
+        </div>
+    </div>
+
+    <!-- Elo probability recap -->
+    <div class="prob-card">
+        <h2>Elo Probabilities</h2>
+        <div class="prob-row">
+            <span class="prob-label" th:text="${prediction.match.teamA.name}">Team A</span>
+            <div class="prob-bar-track">
+                <div class="prob-bar-fill fill-a"
+                     th:style="'width:' + ${prob.winAPercent()}"
+                     th:text="${prob.winAPercent()}">55%</div>
+            </div>
+        </div>
+        <div class="prob-row">
+            <span class="prob-label">Draw</span>
+            <div class="prob-bar-track">
+                <div class="prob-bar-fill fill-draw"
+                     th:style="'width:' + ${prob.drawPercent()}"
+                     th:text="${prob.drawPercent()}">22%</div>
+            </div>
+        </div>
+        <div class="prob-row">
+            <span class="prob-label" th:text="${prediction.match.teamB.name}">Team B</span>
+            <div class="prob-bar-track">
+                <div class="prob-bar-fill fill-b"
+                     th:style="'width:' + ${prob.winBPercent()}"
+                     th:text="${prob.winBPercent()}">23%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation actions -->
+    <div class="actions">
+        <a class="btn btn-secondary" href="/game">← Back to Matches</a>
+        <a class="btn btn-primary"   href="/bracket">Try Full Bracket →</a>
+    </div>
+
+</div>
+
+</body>
+</html>
