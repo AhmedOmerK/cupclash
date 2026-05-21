@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${statusCode} + ' — CupClash'">Error — CupClash</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0e1a;
+            color: #e8eaf0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: #111827;
+            border-bottom: 2px solid #1e3a5f;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .logo { font-size: 1.4rem; font-weight: 700; color: #f5c518; text-decoration: none; letter-spacing: 1px; }
+        .nav-links a { color: #9ca3af; text-decoration: none; margin-left: 1.5rem; font-size: 0.9rem; }
+        .nav-links a:hover { color: #f5c518; }
+
+        .content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .error-card {
+            background: #111827;
+            border: 1px solid #1e3a5f;
+            border-radius: 12px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .status-code {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f5c518;
+            margin-bottom: 0.75rem;
+        }
+
+        .error-message {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .actions { display: flex; gap: 0.75rem; justify-content: center; }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-primary  { background: #f5c518; color: #0a0e1a; }
+        .btn-primary:hover { background: #e0b015; }
+        .btn-secondary { background: #1e3a5f; color: #e8eaf0; border: 1px solid #2d5a8e; }
+        .btn-secondary:hover { background: #2d5a8e; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="logo" href="/">⚽ CupClash</a>
+    <div class="nav-links">
+        <a href="/game">Game-by-Game</a>
+        <a href="/bracket">Full Bracket</a>
+    </div>
+</nav>
+
+<div class="content">
+    <div class="error-card">
+        <div class="status-code" th:text="${statusCode}">500</div>
+        <div class="error-title"  th:text="${errorTitle}">Something Went Wrong</div>
+        <div class="error-message" th:text="${errorMessage}">An unexpected error occurred.</div>
+
+        <div class="actions">
+            <a class="btn btn-secondary" href="javascript:history.back()">← Go Back</a>
+            <a class="btn btn-primary"   href="/">Home</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

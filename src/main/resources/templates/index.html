@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CupClash — 2026 World Cup Predictions</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a0e1a;
+            color: #e8eaf0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Nav ── */
+        nav {
+            background: #111827;
+            border-bottom: 2px solid #1e3a5f;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .logo { font-size: 1.4rem; font-weight: 700; color: #f5c518; text-decoration: none; letter-spacing: 1px; }
+        .nav-links a { color: #9ca3af; text-decoration: none; margin-left: 1.5rem; font-size: 0.9rem; }
+        .nav-links a:hover { color: #f5c518; }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(160deg, #0f2544 0%, #1a1a2e 60%, #0a0e1a 100%);
+            padding: 5rem 2rem 4rem;
+            text-align: center;
+            border-bottom: 1px solid #1e3a5f;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trophy-icon { font-size: 4rem; margin-bottom: 1.25rem; }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #f5c518;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .hero h1 span { color: #e8eaf0; }
+
+        .hero p {
+            color: #9ca3af;
+            font-size: 1.1rem;
+            max-width: 520px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+        }
+
+        /* ── Mode cards ── */
+        .mode-cards {
+            display: flex;
+            gap: 1.25rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 760px;
+        }
+
+        .mode-card {
+            background: #111827;
+            border: 1px solid #1e3a5f;
+            border-radius: 14px;
+            padding: 2rem 1.75rem;
+            flex: 1;
+            min-width: 280px;
+            max-width: 340px;
+            text-align: left;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.2s, transform 0.2s, background 0.2s;
+            display: block;
+        }
+        .mode-card:hover {
+            border-color: #f5c518;
+            background: #151f30;
+            transform: translateY(-3px);
+        }
+
+        .card-icon  { font-size: 2rem; margin-bottom: 1rem; }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f5c518;
+            margin-bottom: 0.5rem;
+        }
+        .card-desc {
+            font-size: 0.88rem;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+        }
+        .card-cta {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f5c518;
+        }
+
+        /* ── Stats strip ── */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1.75rem 2rem;
+            background: #111827;
+            border-top: 1px solid #1e3a5f;
+            flex-wrap: wrap;
+        }
+        .stat { text-align: center; }
+        .stat .number { font-size: 1.6rem; font-weight: 800; color: #f5c518; }
+        .stat .label  { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.1rem; }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            color: #374151;
+            font-size: 0.8rem;
+            padding: 1.25rem;
+            border-top: 1px solid #111827;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a class="logo" href="/">⚽ CupClash</a>
+    <div class="nav-links">
+        <a href="/game">Game-by-Game</a>
+        <a href="/bracket">Full Bracket</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="trophy-icon">🏆</div>
+    <h1>Cup<span>Clash</span></h1>
+    <p>Predict every match of the 2026 FIFA World Cup using Elo ratings.
+       Pick game-by-game or fill out the entire bracket — the math decides the odds.</p>
+
+    <div class="mode-cards">
+
+        <a class="mode-card" href="/game">
+            <div class="card-icon">⚽</div>
+            <div class="card-title">Game-by-Game</div>
+            <div class="card-desc">
+                Browse all 72 group stage matches. View Elo-based win probabilities
+                for any matchup and lock in your prediction one game at a time.
+            </div>
+            <div class="card-cta">Start predicting →</div>
+        </a>
+
+        <a class="mode-card" href="/bracket">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Full Bracket</div>
+            <div class="card-desc">
+                Fill out the entire knockout bracket from the Round of 32 through
+                to the Final. Save your complete prediction as a single bracket.
+            </div>
+            <div class="card-cta">Build your bracket →</div>
+        </a>
+
+    </div>
+</div>
+
+<!-- Stats strip -->
+<div class="stats">
+    <div class="stat">
+        <div class="number">48</div>
+        <div class="label">Teams</div>
+    </div>
+    <div class="stat">
+        <div class="number">104</div>
+        <div class="label">Matches</div>
+    </div>
+    <div class="stat">
+        <div class="number">12</div>
+        <div class="label">Groups</div>
+    </div>
+    <div class="stat">
+        <div class="number">6</div>
+        <div class="label">Confederations</div>
+    </div>
+</div>
+
+<footer>CupClash &copy; 2026 — Predictions powered by Elo ratings</footer>
+
+</body>
+</html>
